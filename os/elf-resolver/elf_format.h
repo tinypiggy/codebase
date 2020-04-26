@@ -1,7 +1,6 @@
 #include <linux/types.h>
 #include <linux/elf-em.h>
 
-
 #ifndef ELF_FORMAT_H
 #define ELF_FORMAT_H
 

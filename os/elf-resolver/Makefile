@@ -1,8 +1,10 @@
-all : elf_prog
+CFLAGS = -std=c99
+
+all : elf_resolver
 	@echo "编译完成"
 	
-elf_prog : elf.o
-	${CC} elf.o -o elf_prog
+elf_resolver : resolver.o
+	${CC} $^ -o $@
 
-elf.o : elf.h elf.c
-	${CC} -c -o elf.o elf.c 
+resolver.o : resolver.c elf_format.h
+	${CC} ${CFLAGS} -c -o $@  $<
