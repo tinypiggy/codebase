@@ -3,7 +3,7 @@ package io.tinypiggy.lexer;
 import java.io.BufferedReader;
 import java.io.FileInputStream;
 import java.io.InputStreamReader;
-import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -28,11 +28,36 @@ public class Lexer {
             "(.*)";
     private Pattern pattern = Pattern.compile(regex);
 
+    private boolean hasMore = false;
+
     public Lexer(BufferedReader reader){
         this.reader = reader;
     }
 
-    private List<Token> queue = new ArrayList<>();
+    private List<Token> queue = new LinkedList<>();
+
+    public Token read(){
+        if (queryToken(0)){
+            return queue.remove(0);
+        }
+        return Token.EOF;
+    }
+
+    public Token peek(int i){
+
+        return Token.EOF;
+    }
+
+    private boolean queryToken(int i){
+        while (i >= queue.size()){
+            if (hasMore){
+                // todo
+            }else {
+                return false;
+            }
+        }
+        return true;
+    }
 
     public static void main(String[] args) {
         if (args.length == 0){
@@ -42,15 +67,16 @@ public class Lexer {
         String comments = "//.*";
         String stringLiteral = "\"(\\\\\"|;|\\\\\\\\|[^\"])*\"";
         String number = "\\d+";
-        String symbol = "[a-zA-Z][a-zA-Z]*";
-        String operator = "\\+|-|\\*|/|%|==|=|\\|\\||&&|<=|>=|\\p{Punct}"; // \p{Punct} 标点符号：!"#$%&'()*+,-./:;<=>?@[\]^_{|}~
+        String symbol = "[a-zA-Z][a-zA-Z0-9]*";
+        String operator = "\\+|-|\\*|/|%|==|=|\\|\\||&&|<=|>=|<|>|\\p{Punct}"; // \p{Punct} 标点符号：!"#$%&'()*+,-./:;<=>?@[\]^_{|}~
 
-        String regex = "(" + space + ")|" +
+        String regex = "((" + space + ")|" +
             "(" + comments +        ")|" +
             "(" + stringLiteral +   ")|" +
             "(" + number +          ")|" +
             "(" + symbol +          ")|" +
-            "(" + operator +        ")";
+            "(" + operator +        ")|" +
+                "(.*))";
 
         BufferedReader reader;
         try {
@@ -69,7 +95,23 @@ public class Lexer {
                 while (pos < end){
                     matcher.region(pos, end);
                     if (matcher.lookingAt()){
-                        System.out.println(matcher.group());
+                        if (matcher.group(2) == null && matcher.group(3) == null){
+                            if (matcher.group(4) != null){
+                                System.out.println("string : " + matcher.group(4));
+                            }
+                            if (matcher.group(6) != null){
+                                System.out.println("number : " + matcher.group(6));
+                            }
+                            if (matcher.group(7) != null){
+                                System.out.println("symbol : " + matcher.group(7));
+                            }
+                            if (matcher.group(8) != null){
+                                System.out.println("operator : " + matcher.group(8));
+                            }
+                            if (matcher.group(9) != null){
+                                System.out.println("out of grammar : " + matcher.group(9));
+                            }
+                        }
                         pos = matcher.end();
                     }
                 }
