@@ -1,3 +1,5 @@
-"abcd" "\\sasa"
-~s7s7
-//"\"sks"
+variable = 12
+if (variable <= 10) {
+  variable = variable * 12
+}
+str = "i am writing a lexer"

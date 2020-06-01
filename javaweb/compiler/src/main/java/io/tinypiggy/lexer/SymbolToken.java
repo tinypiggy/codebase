@@ -9,7 +9,7 @@ public class SymbolToken extends Token {
         this.text = text;
     }
 
-    public Object getText() {
+    public String getText() {
         return text;
     }
 

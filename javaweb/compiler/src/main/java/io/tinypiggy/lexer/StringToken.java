@@ -10,7 +10,7 @@ public class StringToken extends Token {
         this.literal = literal;
     }
 
-    public Object getText() {
+    public String getText() {
         return literal;
     }
 

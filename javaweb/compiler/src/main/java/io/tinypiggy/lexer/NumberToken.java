@@ -9,6 +9,11 @@ public class NumberToken extends Token {
         this.value = value;
     }
 
+    @Override
+    public String getText() {
+        return Integer.toString(value);
+    }
+
     public int getNumber() {
         return value;
     }

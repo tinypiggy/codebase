@@ -1,5 +1,7 @@
 package io.tinypiggy.lexer;
 
+import io.tinypiggy.exception.BasicException;
+
 public abstract class Token {
 
     public static final Token EOF = new Token(-1){};
@@ -12,10 +14,10 @@ public abstract class Token {
     }
 
     public int getNumber() {
-        throw new RuntimeException("");
+        throw new BasicException("词法分析出错", this);
     }
 
-    public Object getText() {
+    public String getText() {
         return "";
     }
 

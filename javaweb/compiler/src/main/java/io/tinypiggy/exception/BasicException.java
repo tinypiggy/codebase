@@ -2,13 +2,13 @@ package io.tinypiggy.exception;
 
 import io.tinypiggy.lexer.Token;
 
-public class LexerException extends RuntimeException {
+public class BasicException extends RuntimeException {
 
-    public LexerException(String message) {
+    public BasicException(String message) {
         super(message);
     }
 
-    public LexerException(String message, Token token) {
+    public BasicException(String message, Token token) {
         super(message + ", case in line number: " + token.location());
     }
 }
