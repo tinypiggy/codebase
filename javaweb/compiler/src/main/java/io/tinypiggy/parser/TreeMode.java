@@ -15,12 +15,12 @@ public class TreeMode implements ParseMode {
     }
 
     @Override
-    public AstTree parse(Lexer lexer, List<AstTree> astTrees) throws ParserException {
-        return parser.visit(lexer);
+    public void parse(Lexer lexer, List<AstTree> astTrees) throws ParserException {
+        astTrees.add(parser.visit(lexer));
     }
 
     @Override
     public boolean match(Lexer lexer) throws ParserException {
-        return false;
+        return parser.match(lexer);
     }
 }

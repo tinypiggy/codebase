@@ -12,7 +12,7 @@ public class ParserException extends Exception {
         super(message);
     }
 
-    public ParserException(String message, Token token) {
+    public ParserException(Token token) {
         super("symbol ( " + token.getText() + ") resolved error case in line number: " + token.location());
     }
 }

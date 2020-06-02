@@ -5,13 +5,13 @@ package io.tinypiggy.parser;
  */
 public class OperatorPriority {
 
-    private int priority;
+    public int priority;
     /**
      * 是否左结合运算符
      * 1 + 2 + 3 左结合
      * a = b = 1 右结合
      */
-    private boolean leftAssociate;
+    public boolean leftAssociate;
 
     public enum ASSOCIATE {
         LEFT,

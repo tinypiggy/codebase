@@ -7,6 +7,6 @@ import io.tinypiggy.lexer.Lexer;
 import java.util.List;
 
 public interface ParseMode {
-    AstTree parse(Lexer lexer, List<AstTree> astTrees) throws ParserException;
+    void parse(Lexer lexer, List<AstTree> astTrees) throws ParserException;
     boolean match(Lexer lexer) throws ParserException;
 }
