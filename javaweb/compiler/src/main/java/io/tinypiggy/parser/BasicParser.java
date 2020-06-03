@@ -68,18 +68,4 @@ public class BasicParser {
 
     }
 
-    public static void main(String[] args) {
-        BufferedReader reader;
-        try {
-            reader = new BufferedReader(new InputStreamReader(new FileInputStream("F:\\git-repo\\codebase\\javaweb\\compiler\\program.script")));
-            Lexer lexer = new Lexer(reader);
-            BasicParser basicParser = new BasicParser();
-            while (lexer.peek(0) != Token.EOF) {
-                AstTree ast = basicParser.parse(lexer);
-                System.out.println("=> " + ast.toString());
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
 }

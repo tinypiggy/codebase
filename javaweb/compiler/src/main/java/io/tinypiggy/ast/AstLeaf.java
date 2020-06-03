@@ -1,5 +1,6 @@
 package io.tinypiggy.ast;
 
+import io.tinypiggy.interpreter.Visitor;
 import io.tinypiggy.lexer.Token;
 
 import java.util.ArrayList;
@@ -11,6 +12,11 @@ public class AstLeaf extends AstTree {
     private Token token;
     public AstLeaf(Token token){
         this.token = token;
+    }
+
+    @Override
+    public <T> T accept(Visitor<T> visitor) {
+        return visitor.visit(this);
     }
 
     @Override

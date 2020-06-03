@@ -1,5 +1,7 @@
 package io.tinypiggy.ast;
 
+import io.tinypiggy.interpreter.Visitor;
+
 import java.util.List;
 
 public class PrimaryExpr extends AstList {
@@ -7,6 +9,12 @@ public class PrimaryExpr extends AstList {
     public PrimaryExpr(List<AstTree> members) {
         super(members);
     }
+
+    @Override
+    public <T> T accept(Visitor<T> visitor) {
+        return visitor.visit(this);
+    }
+
 
     /**
      * 创建一个 primary expression 节点

@@ -1,5 +1,7 @@
 package io.tinypiggy.ast;
 
+import io.tinypiggy.interpreter.Visitor;
+
 import java.util.Iterator;
 import java.util.List;
 
@@ -8,6 +10,11 @@ public class AstList extends AstTree {
     private List<AstTree> members;
     public AstList(List<AstTree> members){
         this.members = members;
+    }
+
+    @Override
+    public <T> T accept(Visitor<T> visitor) {
+        return visitor.visit(this);
     }
 
     @Override
