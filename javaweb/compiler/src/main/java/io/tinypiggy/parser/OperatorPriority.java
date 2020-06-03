@@ -13,11 +13,6 @@ public class OperatorPriority {
      */
     public boolean leftAssociate;
 
-    public enum ASSOCIATE {
-        LEFT,
-        RIGHT
-    }
-
     public OperatorPriority(int priority, boolean leftAssociate) {
         this.priority = priority;
         this.leftAssociate = leftAssociate;

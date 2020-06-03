@@ -29,9 +29,9 @@ public class Lexer {
     private boolean hasMore;
     private List<Token> queue = new LinkedList<>();
 
-    public Lexer(LineNumberReader reader){
+    public Lexer(BufferedReader reader){
         this.hasMore = true;
-        this.reader = reader;
+        this.reader = new LineNumberReader(reader);
     }
 
     public Token read() throws ParserException{

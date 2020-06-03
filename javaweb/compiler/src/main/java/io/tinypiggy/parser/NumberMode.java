@@ -14,5 +14,4 @@ public class NumberMode extends TokenMode {
         return token.isNumber();
     }
 
-
 }

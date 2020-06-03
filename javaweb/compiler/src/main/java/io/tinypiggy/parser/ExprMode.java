@@ -27,9 +27,8 @@ public class ExprMode implements ParseMode {
     public void parse(Lexer lexer, List<AstTree> astTrees) throws ParserException {
 
         AstTree expr = parser.visit(lexer);
-        Token op = lexer.peek(0);
-        while (operators.containsKey(op.getText())){
-            expr = doShiftRight(expr, operators.get(op.getText()), lexer);
+        while (operators.containsKey(lexer.peek(0).getText())){
+            expr = doShiftRight(expr, operators.get(lexer.peek(0).getText()), lexer);
         }
         astTrees.add(expr);
     }

@@ -13,6 +13,6 @@ public class ParserException extends Exception {
     }
 
     public ParserException(Token token) {
-        super("symbol ( " + token.getText() + ") resolved error case in line number: " + token.location());
+        super("symbol (" + token.getText() + ") resolved error case in line number: " + token.location());
     }
 }

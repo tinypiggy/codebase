@@ -19,9 +19,10 @@ public class SkipMode implements ParseMode {
     public void parse(Lexer lexer, List<AstTree> astTrees) throws ParserException {
         if (match(lexer)){
             lexer.read();
-            return;
+        }else {
+            throw new ParserException(lexer.read());
         }
-        throw new ParserException(lexer.read());
+
     }
 
     @Override

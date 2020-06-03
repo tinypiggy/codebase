@@ -1,5 +1,5 @@
 variable = 12
-if (variable <= 10) {
+if (variable < 10) {
   variable = variable * 12
 }
 str = "i am writing a lexer"

@@ -25,8 +25,10 @@ public abstract class TokenMode implements ParseMode {
         if (match(lexer)){
             Token token = lexer.read();
             astTrees.add(factory.make(token));
+        }else {
+            throw new ParserException(lexer.read());
         }
-        throw new ParserException(lexer.read());
+
     }
 
     @Override

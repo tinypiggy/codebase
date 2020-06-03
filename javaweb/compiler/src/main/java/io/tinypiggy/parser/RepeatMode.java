@@ -12,7 +12,7 @@ public class RepeatMode implements ParseMode {
     private boolean onlyOnce;
     private Parser parser;
 
-    public RepeatMode(boolean onlyOnce, Parser parser) {
+    public RepeatMode(Parser parser, boolean onlyOnce) {
         this.onlyOnce = onlyOnce;
         this.parser = parser;
     }

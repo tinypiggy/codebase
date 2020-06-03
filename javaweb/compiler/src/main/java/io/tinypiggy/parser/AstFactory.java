@@ -37,7 +37,7 @@ public interface AstFactory {
                 };
             }
         } catch (NoSuchMethodException e) {
-            e.printStackTrace();
+
         }
         // 构造函数生成
         try {
@@ -51,7 +51,7 @@ public interface AstFactory {
                 };
             }
         } catch (NoSuchMethodException e) {
-            e.printStackTrace();
+
         }
         return null;
 
