@@ -21,7 +21,9 @@ public class Interpreter {
             while (lexer.peek(0) != Token.EOF) {
                 AstTree ast = basicParser.parse(lexer);
                 Object value = evaluator.visit(ast);
-                System.out.println(ast.toString() + " => " + value);
+                if (value != null) {
+                    System.out.println(ast.toString() + " => " + value);
+                }
             }
         } catch (Exception e) {
             e.printStackTrace();

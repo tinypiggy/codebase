@@ -35,13 +35,13 @@ public class BasicParser {
 
     private Parser simple = createParser(PrimaryExpr.class).ast(expr);
     private Parser statement0 = createParser();
-    private Parser block = createParser()
+    private Parser block = createParser(BlockStmt.class)
             .skip("{").option(statement0)
             .repeat(createParser().skip(Token.EOL).option(statement0))
             .skip("}");
     private Parser statement = statement0.or(
             createParser(IfStmt.class).skip("if").ast(expr).ast(block).option(createParser().skip("else").ast(block)),
-            createParser(WhileStmt.class).skip("while").ast(block),
+            createParser(WhileStmt.class).skip("while").ast(expr).ast(block),
             simple
     );
 

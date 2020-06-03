@@ -1,5 +1,10 @@
-variable = 12
+variable = 9
 if (variable < 10) {
   variable = variable * 12
+  variable = variable + 12
 }
 str = "i am writing a lexer"
+
+while variable > 0 {
+    variable = variable - 100
+}
