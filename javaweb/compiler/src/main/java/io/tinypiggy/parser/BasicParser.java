@@ -5,9 +5,6 @@ import io.tinypiggy.exception.ParserException;
 import io.tinypiggy.lexer.Lexer;
 import io.tinypiggy.lexer.Token;
 
-import java.io.BufferedReader;
-import java.io.FileInputStream;
-import java.io.InputStreamReader;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Set;

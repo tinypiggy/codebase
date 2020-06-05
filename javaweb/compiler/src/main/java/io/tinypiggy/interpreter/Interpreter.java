@@ -1,6 +1,7 @@
 package io.tinypiggy.interpreter;
 
 import io.tinypiggy.ast.AstTree;
+import io.tinypiggy.ast.NullStmt;
 import io.tinypiggy.lexer.Lexer;
 import io.tinypiggy.lexer.Token;
 import io.tinypiggy.parser.BasicParser;
@@ -20,8 +21,8 @@ public class Interpreter {
             EvaluateVisitor evaluator = new EvaluateVisitor();
             while (lexer.peek(0) != Token.EOF) {
                 AstTree ast = basicParser.parse(lexer);
-                Object value = evaluator.visit(ast);
-                if (value != null) {
+                if (!(ast instanceof NullStmt)) {
+                    Object value = evaluator.visit(ast);
                     System.out.println(ast.toString() + " => " + value);
                 }
             }
