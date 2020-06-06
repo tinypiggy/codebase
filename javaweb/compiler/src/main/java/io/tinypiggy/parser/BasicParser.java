@@ -14,35 +14,35 @@ import static io.tinypiggy.parser.Parser.createParser;
 public class BasicParser {
 
     private HashMap<String, OperatorPriority> operators = new HashMap<>();
-    private Set<String> reserved = new HashSet<>();
+    Set<String> reserved = new HashSet<>();
 
     private Parser expr0 = createParser();
-    private Parser primary = createParser(PrimaryExpr.class).or(
+    Parser primary = createParser(PrimaryExpr.class).or(
             createParser().skip("(").ast(expr0).skip(")"),
             createParser().number(NumberLeaf.class),
             createParser().stringLiteral(StrLeaf.class),
             createParser().symbol(SymbolLeaf.class, reserved)
     );
 
-    private Parser factor = createParser().or(
+    Parser factor = createParser().or(
             createParser(NegativeExpr.class).skip("-").ast(primary),
             createParser().ast(primary)
     );
-    private Parser expr = expr0.expression(BinaryExpr.class, factor, operators);
+    Parser expr = expr0.expression(BinaryExpr.class, factor, operators);
 
-    private Parser simple = createParser(PrimaryExpr.class).ast(expr);
+    Parser simple = createParser(PrimaryExpr.class).ast(expr);
     private Parser statement0 = createParser();
-    private Parser block = createParser(BlockStmt.class)
+    Parser block = createParser(BlockStmt.class)
             .skip("{").option(statement0)
             .repeat(createParser().skip(Token.EOL).option(statement0))
             .skip("}");
-    private Parser statement = statement0.or(
+    Parser statement = statement0.or(
             createParser(IfStmt.class).skip("if").ast(expr).ast(block).option(createParser().skip("else").ast(block)),
             createParser(WhileStmt.class).skip("while").ast(expr).ast(block),
             simple
     );
 
-    private Parser program = createParser().or(statement, createParser(NullStmt.class)).skip(Token.EOL);
+    Parser program = createParser().or(statement, createParser(NullStmt.class)).skip(Token.EOL);
 
     public AstTree parse(Lexer lexer) throws ParserException{
         return program.visit(lexer);

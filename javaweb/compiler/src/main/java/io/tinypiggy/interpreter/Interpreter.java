@@ -15,7 +15,8 @@ public class Interpreter {
     public static void main(String[] args) {
         BufferedReader reader;
         try {
-            reader = new BufferedReader(new InputStreamReader(new FileInputStream("F:\\git-repo\\codebase\\javaweb\\compiler\\program.script")));
+
+            reader = new BufferedReader(new InputStreamReader(Interpreter.class.getClassLoader().getResourceAsStream("./program.script")));
             Lexer lexer = new Lexer(reader);
             BasicParser basicParser = new BasicParser();
             EvaluateVisitor evaluator = new EvaluateVisitor();

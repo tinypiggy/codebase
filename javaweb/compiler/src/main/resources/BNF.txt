@@ -1,0 +1,30 @@
+primary		:( "fun" param_list block
+			| "[" [ elements ] "]" |"(" expr ")" | NUMBER | IDENTIFIER | STRING) { postfix }
+factor		: "-" primary | primary
+expr		: factor { OP factor}
+simple 		: expr [ args ]
+block		: "{" [statement] { (EOL | ";") [statement] } "}"
+statement	: "if" expr block ["else" block]
+			| "while" expr block
+			| simple [ args ]
+
+param 		: IDENTIFIER
+params 		: param {, param}
+param_list 	: "("[params] ")"
+def 		: "fun" IDENTIFIER param_list block
+arg 		；expr
+args		: expr {, expr}
+postfix 	: "." IDENTIFIER | "(" [args] ")" | "[" expr "]"
+
+elements    : expr { "," expr }
+
+member		: def | simple
+classbody 	: "{" [member] { ( ";"|EOL ) [member] } "}"
+defclass	: "class" IDENTIFIER [ "extends" IDENTIFIER] classbody
+
+program		: [ defclass | def | statement] {(EOL | ";")}
+
+
+修改方向：
+1、如果已经定义了外层定义域变量，内层定义域不能定义相同名字的变量，只能读写外层定义域变量（函数参数除外）
+2、不支持 else if 语法

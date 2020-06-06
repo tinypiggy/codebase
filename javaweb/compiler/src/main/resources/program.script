@@ -5,6 +5,7 @@ if (variable < 10) {
 }
 str = "i am writing a lexer"
 
+variable = variable + variable * ( 10 + variable )
 while variable > 0 {
     variable = variable - 100
 }

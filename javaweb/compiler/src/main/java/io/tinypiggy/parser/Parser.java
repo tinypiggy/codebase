@@ -1,7 +1,6 @@
 package io.tinypiggy.parser;
 
 import io.tinypiggy.ast.AstTree;
-import io.tinypiggy.ast.NumberLeaf;
 import io.tinypiggy.exception.ParserException;
 import io.tinypiggy.lexer.Lexer;
 
@@ -12,7 +11,7 @@ import java.util.Set;
 
 public class Parser {
 
-    // 组合字方式
+    // 组合子（Y-combiner）方式
     // 每个 parser 含有一些匹配模式 elements
 
     private List<ParseMode> parseModes;
@@ -27,11 +26,11 @@ public class Parser {
         reset(clazz);
     }
 
-    public static Parser createParser(){
+    static Parser createParser(){
         return createParser(null);
     }
 
-    public static Parser createParser(Class<? extends AstTree> clazz){
+    static Parser createParser(Class<? extends AstTree> clazz){
         return new Parser(clazz);
     }
 
