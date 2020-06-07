@@ -7,7 +7,8 @@ import java.util.Iterator;
 
 public class EvaluateVisitor implements Visitor<Object> {
 
-    private static Environment env = new Environment();
+    private static Environment env = new Environment(null);
+    private static Environment current = env;
 
     @Override
     public Object visit(AstList astList) {
@@ -107,16 +108,6 @@ public class EvaluateVisitor implements Visitor<Object> {
     }
 
     @Override
-    public Object visit(PrimaryExpr primaryExpr) {
-        Object object = null;
-        Iterator<AstTree> members = primaryExpr.members();
-        while (members.hasNext()){
-            object = members.next().accept(this);
-        }
-        return object;
-    }
-
-    @Override
     public Object visit(IfStmt ifStmt) {
         Object object = null;
         Object condition = ifStmt.condition().accept(this);
@@ -153,10 +144,44 @@ public class EvaluateVisitor implements Visitor<Object> {
 
     @Override
     public Object visit(BlockStmt blockStmt) {
+        return visit(blockStmt);
+    }
+
+    private Object visitAstList(AstList astTrees){
         Object object = null;
-        Iterator<AstTree> members = blockStmt.members();
+        Iterator<AstTree> members = astTrees.members();
         while (members.hasNext()){
             object = members.next().accept(this);
         }
-        return object;    }
+        return object;
+    }
+
+    @Override
+    public Object visit(DefStmt defStmt){
+        String name = defStmt.functionName();
+        return env.putLocal(name, new Function(defStmt.parameters(), defStmt.block(), new Environment(env)));
+    }
+
+    @Override
+    public Object visit(AnonymousFuc anonymousFuc) {
+        return new Function(anonymousFuc.parameters(), anonymousFuc.block(), new Environment(current));
+    }
+
+    @Override
+    public Object visit(PrimaryExpr primaryExpr) {
+//        if ()
+        primaryExpr.size();
+        return visitAstList(primaryExpr);
+    }
+
+    public Object proccessFunction(Args args,  Object func){
+
+        current = current.getOut();
+        return null;
+    }
+
+    public Object resolveParams(Function function){
+
+        return null;
+    }
 }

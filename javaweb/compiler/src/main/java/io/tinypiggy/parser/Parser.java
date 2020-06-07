@@ -123,7 +123,17 @@ public class Parser {
         return this;
     }
 
+    /**
+     * 这里判断是否是 OrMode ，主要是为了保持 原来模式中生成的语法树节点类型
+     * @param parser 插入一个中匹配模式
+     * @return this
+     */
     public Parser insertChoice(Parser parser){
+        ParseMode mode = parseModes.get(0);
+        if (mode instanceof OrMode){
+            ((OrMode)mode).insert(parser);
+            return this;
+        }
         Parser other = new Parser(this);
         reset(null);
         or(parser, other);

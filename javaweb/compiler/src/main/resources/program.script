@@ -1,11 +1,24 @@
+// function defined
+def f(x, y){
+    fun (a){
+        x + y + a
+    }
+}
+myFunc = f(3, 4)
+// assign expression
 variable = 9
+str = "i am writing a lexer"
+
+// if statement
 if (variable < 10) {
   variable = variable * 12
   variable = variable + 12
 }
-str = "i am writing a lexer"
 
-variable = variable + variable * ( 10 + variable )
+// while statement
 while variable > 0 {
     variable = variable - 100
 }
+
+// operator priority
+variable = variable + variable * ( 10 + variable )

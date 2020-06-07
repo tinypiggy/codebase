@@ -32,4 +32,7 @@ public interface Visitor<T> {
     T visit(IfStmt ifStmt);
     T visit(WhileStmt whileStmt);
     T visit(BlockStmt blockStmt);
+
+    T visit(DefStmt defStmt);
+    T visit(AnonymousFuc anonymousFuc);
 }

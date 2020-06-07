@@ -42,7 +42,7 @@ public class OrMode implements ParseMode {
         return null;
     }
 
-    private void insert(Parser parser){
+    public void insert(Parser parser){
         if (parser == null){
             return;
         }
