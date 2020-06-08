@@ -2,6 +2,7 @@
 def f(x, y){
     a = 2
     fun (){
+        print(a, "closure variable a = ")
         a = a + 2
         x + y + a
     }
@@ -11,6 +12,7 @@ myFunc()
 myFunc()
 otherFunc = f(3, 4)
 otherFunc()
+
 // assign expression
 variable = 9
 str = "i am writing a lexer"

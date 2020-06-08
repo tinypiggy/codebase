@@ -21,7 +21,7 @@ public class Interpreter {
             Lexer lexer = new Lexer(reader);
             BasicParser basicParser = new FuncParser();
             EvaluateVisitor evaluator = new EvaluateVisitor();
-            Environment global = new Environment(null);
+            Environment global = Environment.environment();
             while (lexer.peek(0) != Token.EOF) {
                 AstTree ast = basicParser.parse(lexer);
                 if (!(ast instanceof NullStmt)) {

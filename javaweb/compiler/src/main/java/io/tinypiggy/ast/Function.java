@@ -6,13 +6,14 @@ public class Function {
 
     private Parameters parameters;
     private BlockStmt block;
-
+    private String name;
     private Environment environment;
 
-    public Function(Parameters parameters, BlockStmt block, Environment environment) {
+    public Function(Parameters parameters, BlockStmt block, Environment environment, String name) {
         this.parameters = parameters;
         this.block = block;
         this.environment = environment;
+        this.name = name;
     }
 
     public Parameters getParameters() {
@@ -21,6 +22,10 @@ public class Function {
 
     public BlockStmt getBlock() {
         return block;
+    }
+
+    public String getName() {
+        return name;
     }
 
     /**

@@ -158,12 +158,12 @@ public class EvaluateVisitor implements Visitor<Object> {
     @Override
     public Object visit(DefStmt defStmt, Environment environment){
         String name = defStmt.functionName();
-        return environment.putLocal(name, new Function(defStmt.parameters(), defStmt.block(), environment));
+        return environment.putLocal(name, new Function(defStmt.parameters(), defStmt.block(), environment, name));
     }
 
     @Override
     public Object visit(AnonymousFunc anonymousFuc, Environment environment) {
-        return new Function(anonymousFuc.parameters(), anonymousFuc.block(), environment);
+        return new Function(anonymousFuc.parameters(), anonymousFuc.block(), environment, "anonymous");
     }
 
     /**
@@ -186,20 +186,40 @@ public class EvaluateVisitor implements Visitor<Object> {
     }
 
     private Object processFunction(AstTree args, Object func, Environment environment){
+        if (func instanceof NativeFunction && (args instanceof Args)){
+            Args arguments = (Args)args;
+            NativeFunction nativeFunction = (NativeFunction)func;
+            return processNative(nativeFunction, arguments, environment);
+        }
+
         if (!(args instanceof Args) || !(func instanceof Function)){
             throw new BasicException("function run exception:", (AstTree)func);
         }
         Function function = (Function)func;
         Environment funcEnv = function.makeEnvironment();
         Args arguments = (Args)args;
-        resolveParams(function, arguments, funcEnv);
+        resolveParams(function, arguments, funcEnv, environment);
         return function.getBlock().accept(this, funcEnv);
     }
 
-    public void resolveParams(Function function, Args args, Environment funcEnv){
+    private Object processNative(NativeFunction func, Args args, Environment callerEnv){
+        if (args.size() < func.getParamNumbers()){
+            throw new BasicException("function " + func.getName() + " 入参数量不正确:", args);
+        }
+        Object[] params = new Object[func.getParamNumbers()];
+        for (int i = 0; i < func.getParamNumbers(); i++){
+            params[i] = args.getMember(i).accept(this, callerEnv);
+        }
+        return func.invoke(params, args);
+    }
+
+    private void resolveParams(Function function, Args args, Environment funcEnv, Environment callerEnv){
         Parameters parameters = function.getParameters();
+        if (args.size() < parameters.size()){
+            throw new BasicException("function " + function.getName() + " 入参数量不正确:", args);
+        }
         for (int i = 0; i < parameters.size(); i++){
-            funcEnv.putLocal(parameters.name(i), args.getMember(i).accept(this, funcEnv.getOut()));
+            funcEnv.putLocal(parameters.name(i), args.getMember(i).accept(this, callerEnv));
         }
     }
 }
