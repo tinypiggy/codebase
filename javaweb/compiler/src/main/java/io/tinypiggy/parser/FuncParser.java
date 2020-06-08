@@ -18,7 +18,7 @@ public class FuncParser extends BasicParser {
     /**
      * 这里不能是和函数定义的前缀不一致，因为我们的程序不回溯，
      */
-    private Parser fun = createParser(AnonymousFuc.class).skip("fun")
+    private Parser fun = createParser(AnonymousFunc.class).skip("fun")
                 .skip("(").maybe(params).skip(")").ast(block);
 
     public FuncParser() {

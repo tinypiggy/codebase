@@ -2,48 +2,47 @@ package io.tinypiggy.interpreter;
 
 import io.tinypiggy.ast.*;
 import io.tinypiggy.exception.BasicException;
+import io.tinypiggy.exception.ParserException;
+import io.tinypiggy.parser.Parser;
 
 import java.util.Iterator;
 
 public class EvaluateVisitor implements Visitor<Object> {
 
-    private static Environment env = new Environment(null);
-    private static Environment current = env;
-
     @Override
-    public Object visit(AstList astList) {
+    public Object visit(AstList astList, Environment environment) {
         throw new BasicException("AstList resolve fail : " + astList.toString(), astList);
     }
 
     @Override
-    public Object visit(AstLeaf leaf) {
+    public Object visit(AstLeaf leaf, Environment environment) {
         throw new BasicException("AstLeaf resolve fail : " + leaf.toString(), leaf);
     }
 
     @Override
-    public Object visit(BinaryExpr binaryExpr) {
+    public Object visit(BinaryExpr binaryExpr, Environment environment) {
         AstTree left = binaryExpr.left();
         AstTree right = binaryExpr.right();
         String op = binaryExpr.operator();
         if (op.equals("=")){
-            return computeForAssign(left, right);
+            return computeForAssign(left, right, environment);
         }
 
-        return computeOp(left, right, op);
+        return computeOp(left, right, op, environment);
     }
 
-    private Object computeForAssign(AstTree left, AstTree right){
+    private Object computeForAssign(AstTree left, AstTree right, Environment environment){
         if (left instanceof SymbolLeaf){
-            Object object = right.accept(this);
-            env.put(((SymbolLeaf) left).value(), object);
+            Object object = right.accept(this, environment);
+            environment.put(((SymbolLeaf) left).value(), object);
             return object;
         }
         throw new BasicException("left value : " + left.toString() + "is not a symbol", left);
     }
 
-    private Object computeOp(AstTree left, AstTree right, String op){
-        Object lValue = left.accept(this);
-        Object rValue = right.accept(this);
+    private Object computeOp(AstTree left, AstTree right, String op, Environment environment){
+        Object lValue = left.accept(this, environment);
+        Object rValue = right.accept(this, environment);
         if (lValue instanceof Integer && rValue instanceof Integer){
             return computeNumber(lValue, rValue, op);
         }
@@ -75,8 +74,8 @@ public class EvaluateVisitor implements Visitor<Object> {
     }
 
     @Override
-    public Object visit(NegativeExpr negativeExpr) {
-        Object object = negativeExpr.operand().accept(this);
+    public Object visit(NegativeExpr negativeExpr, Environment environment) {
+        Object object = negativeExpr.operand().accept(this, environment);
         if (object instanceof Integer){
             return -(Integer)object;
         }
@@ -84,23 +83,23 @@ public class EvaluateVisitor implements Visitor<Object> {
     }
 
     @Override
-    public Object visit(NullStmt nullStmt) {
+    public Object visit(NullStmt nullStmt, Environment environment) {
         return null;
     }
 
     @Override
-    public Object visit(NumberLeaf numberLeaf) {
+    public Object visit(NumberLeaf numberLeaf, Environment environment) {
         return numberLeaf.value();
     }
 
     @Override
-    public Object visit(StrLeaf strLeaf) {
+    public Object visit(StrLeaf strLeaf, Environment environment) {
         return strLeaf.value();
     }
 
     @Override
-    public Object visit(SymbolLeaf symbolLeaf) {
-        Object object = env.get(symbolLeaf.value());
+    public Object visit(SymbolLeaf symbolLeaf, Environment environment) {
+        Object object = environment.get(symbolLeaf.value());
         if (object == null){
             throw new BasicException("undefined symbol : " + symbolLeaf.value() + " at " + symbolLeaf.location());
         }
@@ -108,15 +107,15 @@ public class EvaluateVisitor implements Visitor<Object> {
     }
 
     @Override
-    public Object visit(IfStmt ifStmt) {
+    public Object visit(IfStmt ifStmt, Environment environment) {
         Object object = null;
-        Object condition = ifStmt.condition().accept(this);
+        Object condition = ifStmt.condition().accept(this, environment);
         if (condition instanceof Boolean){
             if ((Boolean)condition){
-                object = ifStmt.thenBlock().accept(this);
+                object = ifStmt.thenBlock().accept(this, environment);
             }
             if (!(Boolean)condition && ifStmt.elseBlock() != null){
-                object = ifStmt.thenBlock().accept(this);
+                object = ifStmt.thenBlock().accept(this, environment);
             }
         }else {
             throw new BasicException("while statement condition is not boolean");
@@ -125,13 +124,13 @@ public class EvaluateVisitor implements Visitor<Object> {
     }
 
     @Override
-    public Object visit(WhileStmt whileStmt) {
+    public Object visit(WhileStmt whileStmt, Environment environment) {
         Object object = null;
         while (true) {
-            Object condition = whileStmt.condition().accept(this);
+            Object condition = whileStmt.condition().accept(this, environment);
             if (condition instanceof Boolean){
                 if ((Boolean)condition){
-                    object = whileStmt.thenBlock().accept(this);
+                    object = whileStmt.thenBlock().accept(this, environment);
                 }else {
                     break;
                 }
@@ -143,45 +142,64 @@ public class EvaluateVisitor implements Visitor<Object> {
     }
 
     @Override
-    public Object visit(BlockStmt blockStmt) {
-        return visit(blockStmt);
+    public Object visit(BlockStmt blockStmt, Environment environment) {
+        return visitAstList(blockStmt, environment);
     }
 
-    private Object visitAstList(AstList astTrees){
+    private Object visitAstList(AstList astTrees, Environment environment){
         Object object = null;
         Iterator<AstTree> members = astTrees.members();
         while (members.hasNext()){
-            object = members.next().accept(this);
+            object = members.next().accept(this, environment);
         }
         return object;
     }
 
     @Override
-    public Object visit(DefStmt defStmt){
+    public Object visit(DefStmt defStmt, Environment environment){
         String name = defStmt.functionName();
-        return env.putLocal(name, new Function(defStmt.parameters(), defStmt.block(), new Environment(env)));
+        return environment.putLocal(name, new Function(defStmt.parameters(), defStmt.block(), environment));
     }
 
     @Override
-    public Object visit(AnonymousFuc anonymousFuc) {
-        return new Function(anonymousFuc.parameters(), anonymousFuc.block(), new Environment(current));
+    public Object visit(AnonymousFunc anonymousFuc, Environment environment) {
+        return new Function(anonymousFuc.parameters(), anonymousFuc.block(), environment);
     }
 
+    /**
+     * 这里只处理函数和数组，因为只有一个 成员节点 的 primaryExpr 节点 会被优化成员节点直接取代
+     * @param primaryExpr 函数和数组节点
+     * @return 计算结果
+     */
     @Override
-    public Object visit(PrimaryExpr primaryExpr) {
-//        if ()
-        primaryExpr.size();
-        return visitAstList(primaryExpr);
+    public Object visit(PrimaryExpr primaryExpr, Environment environment) {
+        if (primaryExpr.size() < 2){
+            return null;
+        }
+        Iterator<AstTree> members = primaryExpr.members();
+        Object result = members.next().accept(this, environment);
+        while (members.hasNext()){
+            AstTree args = members.next();
+            result = processFunction(args, result, environment);
+        }
+        return result;
     }
 
-    public Object proccessFunction(Args args,  Object func){
-
-        current = current.getOut();
-        return null;
+    private Object processFunction(AstTree args, Object func, Environment environment){
+        if (!(args instanceof Args) || !(func instanceof Function)){
+            throw new BasicException("function run exception:", (AstTree)func);
+        }
+        Function function = (Function)func;
+        Environment funcEnv = function.makeEnvironment();
+        Args arguments = (Args)args;
+        resolveParams(function, arguments, funcEnv);
+        return function.getBlock().accept(this, funcEnv);
     }
 
-    public Object resolveParams(Function function){
-
-        return null;
+    public void resolveParams(Function function, Args args, Environment funcEnv){
+        Parameters parameters = function.getParameters();
+        for (int i = 0; i < parameters.size(); i++){
+            funcEnv.putLocal(parameters.name(i), args.getMember(i).accept(this, funcEnv.getOut()));
+        }
     }
 }

@@ -1,11 +1,19 @@
 package io.tinypiggy.ast;
 
+import io.tinypiggy.interpreter.Environment;
+import io.tinypiggy.interpreter.Visitor;
+
 import java.util.List;
 
 public class DefStmt extends AstList {
 
     public DefStmt(List<AstTree> members) {
         super(members);
+    }
+
+    @Override
+    public <T> T accept(Visitor<T> visitor, Environment environment) {
+        return visitor.visit(this, environment);
     }
 
     public String functionName(){

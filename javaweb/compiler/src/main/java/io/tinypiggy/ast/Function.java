@@ -23,7 +23,13 @@ public class Function {
         return block;
     }
 
-    public Environment getEnvironment() {
-        return environment;
+    /**
+     * 为 闭包closure 设计的，也可以扩展成对 class 的支持
+     * 这个 environment 对象保存了上层 环境的变量，从而实现了闭包
+     * @return 所在定义域的环境
+     */
+    public Environment makeEnvironment() {
+        return new Environment(environment);
     }
+
 }

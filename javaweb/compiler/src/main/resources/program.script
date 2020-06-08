@@ -1,10 +1,16 @@
-// function defined
+// function defined and closure implement
 def f(x, y){
-    fun (a){
+    a = 2
+    fun (){
+        a = a + 2
         x + y + a
     }
 }
 myFunc = f(3, 4)
+myFunc()
+myFunc()
+otherFunc = f(3, 4)
+otherFunc()
 // assign expression
 variable = 9
 str = "i am writing a lexer"

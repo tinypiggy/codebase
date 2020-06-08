@@ -1,11 +1,19 @@
 package io.tinypiggy.ast;
 
+import io.tinypiggy.interpreter.Environment;
+import io.tinypiggy.interpreter.Visitor;
+
 import java.util.List;
 
-public class AnonymousFuc extends AstList {
+public class AnonymousFunc extends AstList {
 
-    public AnonymousFuc(List<AstTree> members) {
+    public AnonymousFunc(List<AstTree> members) {
         super(members);
+    }
+
+    @Override
+    public <T> T accept(Visitor<T> visitor, Environment environment) {
+        return visitor.visit(this, environment);
     }
 
     public Parameters parameters(){

@@ -8,7 +8,9 @@ public class Parameters extends AstList {
         super(members);
     }
 
-    String name(int i){
+    public String name(int i){
         return ((AstLeaf)getMember(i)).token().getText();
     }
+
+
 }

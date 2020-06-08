@@ -1,5 +1,6 @@
 package io.tinypiggy.ast;
 
+import io.tinypiggy.interpreter.Environment;
 import io.tinypiggy.interpreter.Visitor;
 import io.tinypiggy.lexer.Token;
 
@@ -15,8 +16,8 @@ public class AstLeaf extends AstTree {
     }
 
     @Override
-    public <T> T accept(Visitor<T> visitor) {
-        return visitor.visit(this);
+    public <T> T accept(Visitor<T> visitor, Environment environment) {
+        return visitor.visit(this, environment);
     }
 
     @Override

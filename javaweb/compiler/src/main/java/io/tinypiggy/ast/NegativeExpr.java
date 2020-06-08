@@ -1,5 +1,6 @@
 package io.tinypiggy.ast;
 
+import io.tinypiggy.interpreter.Environment;
 import io.tinypiggy.interpreter.Visitor;
 
 import java.util.List;
@@ -11,8 +12,8 @@ public class NegativeExpr extends AstList {
     }
 
     @Override
-    public <T> T accept(Visitor<T> visitor) {
-        return visitor.visit(this);
+    public <T> T accept(Visitor<T> visitor, Environment environment) {
+        return visitor.visit(this, environment);
     }
 
     public AstTree operand(){
