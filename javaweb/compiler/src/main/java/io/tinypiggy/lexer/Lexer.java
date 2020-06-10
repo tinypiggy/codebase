@@ -18,7 +18,7 @@ public class Lexer {
     private String number = "\\d+";
     private String symbol = "[a-zA-Z][a-zA-Z0-9_]*";
     private String operator = "\\+|-|\\*|/|%|==|=|\\|\\||&&" +
-            "|<=|>=|<|>|,|\\{|}|\\.|\\(|\\)|;|!|&|~|\\^"; // \p{Punct} 标点符号：!"#$%&'()*+,-./:;<=>?@[\]^_{|}~
+            "|<=|>=|<|>|,|\\{|}|\\.|\\(|\\)|;|!|&|~|\\^|\\[|]"; // \p{Punct} 标点符号：!"#$%&'()*+,-./:;<=>?@[\]^_{|}~
     private String regex = "((" + space + ")|" +
             "(" + comments +        ")|" +
             "(" + number +          ")|" +

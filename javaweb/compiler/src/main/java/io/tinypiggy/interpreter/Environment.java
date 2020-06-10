@@ -58,7 +58,7 @@ public class Environment {
     }
 
     public static void print(Object message, String prefix){
-        System.out.println(prefix + message);
+        System.out.println(prefix + " " +  message);
     }
 
     public static void register(Environment environment, String name, Class<?> owner, Class<?>...parameters){

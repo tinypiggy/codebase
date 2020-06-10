@@ -1,3 +1,7 @@
+// array implement
+array = ["message", "i say"];
+print(array[0], array[1])
+
 // function defined and closure implement
 def f(x, y){
     a = 2
@@ -7,11 +11,18 @@ def f(x, y){
         x + y + a
     }
 }
+
 myFunc = f(3, 4)
 myFunc()
 myFunc()
 otherFunc = f(3, 4)
 otherFunc()
+
+def g(x, y){
+    x + y
+}
+g(1, 2)
+g 1, 2
 
 // assign expression
 variable = 9

@@ -4,6 +4,7 @@ import io.tinypiggy.ast.AstTree;
 import io.tinypiggy.ast.NullStmt;
 import io.tinypiggy.lexer.Lexer;
 import io.tinypiggy.lexer.Token;
+import io.tinypiggy.parser.ArrayParser;
 import io.tinypiggy.parser.BasicParser;
 import io.tinypiggy.parser.FuncParser;
 
@@ -15,11 +16,10 @@ public class Interpreter {
     public static void main(String[] args) {
         BufferedReader reader;
         try {
-
             reader = new BufferedReader(new InputStreamReader(
-                    Interpreter.class.getClassLoader().getResourceAsStream("./program.script")));
+                    Interpreter.class.getClassLoader().getResourceAsStream("program.script")));
             Lexer lexer = new Lexer(reader);
-            BasicParser basicParser = new FuncParser();
+            BasicParser basicParser = new ArrayParser();
             EvaluateVisitor evaluator = new EvaluateVisitor();
             Environment global = Environment.environment();
             while (lexer.peek(0) != Token.EOF) {

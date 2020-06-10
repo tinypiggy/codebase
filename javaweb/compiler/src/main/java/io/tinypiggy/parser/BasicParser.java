@@ -24,7 +24,7 @@ public class BasicParser {
             createParser().symbol(SymbolLeaf.class, reserved)
     );
 
-    Parser factor = createParser().or(
+    private Parser factor = createParser().or(
             createParser(NegativeExpr.class).skip("-").ast(primary),
             createParser().ast(primary)
     );
@@ -36,7 +36,7 @@ public class BasicParser {
             .skip("{").option(statement0)
             .repeat(createParser().skip(Token.EOL).option(statement0))
             .skip("}");
-    Parser statement = statement0.or(
+    private Parser statement = statement0.or(
             createParser(IfStmt.class).skip("if").ast(expr).ast(block).option(createParser().skip("else").ast(block)),
             createParser(WhileStmt.class).skip("while").ast(expr).ast(block),
             simple

@@ -13,7 +13,7 @@ public class FuncParser extends BasicParser {
     private Parser args = createParser(Args.class).ast(expr)
             .repeat(createParser().skip(",").ast(expr));
 
-    private Parser postfix = createParser().skip("(").maybe(args).skip(")");
+    Parser postfix = createParser().skip("(").maybe(args).skip(")");
 
     /**
      * 这里不能是和函数定义的前缀不一致，因为我们的程序不回溯，

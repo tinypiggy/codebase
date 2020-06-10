@@ -176,30 +176,37 @@ public class EvaluateVisitor implements Visitor<Object> {
         if (primaryExpr.size() < 2){
             return null;
         }
-        Iterator<AstTree> members = primaryExpr.members();
-        Object result = members.next().accept(this, environment);
-        while (members.hasNext()){
-            AstTree args = members.next();
-            result = processFunction(args, result, environment);
+        Iterator<AstTree> iterator = primaryExpr.iterator();
+        Object result = iterator.next().accept(this, environment);
+        while (iterator.hasNext()){
+            AstTree args = iterator.next();
+            result = processNext(args, result, environment);
         }
         return result;
     }
 
-    private Object processFunction(AstTree args, Object func, Environment environment){
-        if (func instanceof NativeFunction && (args instanceof Args)){
-            Args arguments = (Args)args;
-            NativeFunction nativeFunction = (NativeFunction)func;
+    private Object processNext(AstTree postfix, Object prefix, Environment environment){
+
+        if (prefix instanceof NativeFunction && (postfix instanceof Args)){
+            Args arguments = (Args)postfix;
+            NativeFunction nativeFunction = (NativeFunction)prefix;
             return processNative(nativeFunction, arguments, environment);
         }
 
-        if (!(args instanceof Args) || !(func instanceof Function)){
-            throw new BasicException("function run exception:", (AstTree)func);
+        if ((postfix instanceof Args) && (prefix instanceof Function)){
+            Environment funcEnv = ((Function)prefix).makeEnvironment();
+            resolveParams((Function)prefix, (Args)postfix, funcEnv, environment);
+            return ((Function)prefix).getBlock().accept(this, funcEnv);
         }
-        Function function = (Function)func;
-        Environment funcEnv = function.makeEnvironment();
-        Args arguments = (Args)args;
-        resolveParams(function, arguments, funcEnv, environment);
-        return function.getBlock().accept(this, funcEnv);
+
+        if (postfix instanceof ArrayItem && prefix instanceof Object[]){
+            Object index = ((ArrayItem)postfix).index().accept(this, environment);
+            if (!(index instanceof Integer)){
+                throw new BasicException("array offset is not a integer: ", postfix);
+            }
+            return ((Object[])prefix)[(Integer) index];
+        }
+        throw new BasicException("primary postfix expression cause exception:", postfix);
     }
 
     private Object processNative(NativeFunction func, Args args, Environment callerEnv){
@@ -221,5 +228,14 @@ public class EvaluateVisitor implements Visitor<Object> {
         for (int i = 0; i < parameters.size(); i++){
             funcEnv.putLocal(parameters.name(i), args.getMember(i).accept(this, callerEnv));
         }
+    }
+
+    @Override
+    public Object visit(ArrayLiteral arrayLiteral, Environment environment) {
+        Object[] arr = new Object[arrayLiteral.size()];
+        for (int i = 0; i < arrayLiteral.size(); i++){
+            arr[i] = arrayLiteral.getMember(i).accept(this, environment);
+        }
+        return arr;
     }
 }
