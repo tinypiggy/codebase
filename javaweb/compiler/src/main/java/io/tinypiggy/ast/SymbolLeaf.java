@@ -6,6 +6,8 @@ import io.tinypiggy.lexer.Token;
 
 public class SymbolLeaf extends AstLeaf {
 
+    private int deepth, index;
+
     public SymbolLeaf(Token token) {
         super(token);
     }

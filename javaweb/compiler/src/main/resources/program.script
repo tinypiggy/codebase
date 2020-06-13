@@ -35,9 +35,12 @@ if (variable < 10) {
 }
 
 // while statement
-while variable > 0 {
-    variable = variable - 100
+i = 100
+total = 0
+while i > 0 {
+    total = total + i
+    i = i - 1
 }
-
+total
 // operator priority
 variable = variable + variable * ( 10 + variable )
