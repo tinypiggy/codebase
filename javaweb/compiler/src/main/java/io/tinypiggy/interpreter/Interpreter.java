@@ -6,7 +6,6 @@ import io.tinypiggy.lexer.Lexer;
 import io.tinypiggy.lexer.Token;
 import io.tinypiggy.parser.ArrayParser;
 import io.tinypiggy.parser.BasicParser;
-import io.tinypiggy.parser.FuncParser;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
@@ -17,14 +16,17 @@ public class Interpreter {
         BufferedReader reader;
         try {
             reader = new BufferedReader(new InputStreamReader(
-                    Interpreter.class.getClassLoader().getResourceAsStream("program.script")));
+                    Interpreter.class.getClassLoader().getResourceAsStream("fib.sc")));
             Lexer lexer = new Lexer(reader);
             BasicParser basicParser = new ArrayParser();
             EvaluateVisitor evaluator = new EvaluateVisitor();
-            Environment global = Environment.environment();
+            ResizableOptEnv global = new ResizableOptEnv(null);
+            LookupVisiter lookupVisiter = new LookupVisiter();
+            NativeRegister.registerInEnv(global);
             while (lexer.peek(0) != Token.EOF) {
                 AstTree ast = basicParser.parse(lexer);
                 if (!(ast instanceof NullStmt)) {
+                    lookupVisiter.visit(ast, global.getSymbols());
                     Object value = evaluator.visit(ast, global);
                     System.out.println(ast.toString() + " => " + value);
                 }

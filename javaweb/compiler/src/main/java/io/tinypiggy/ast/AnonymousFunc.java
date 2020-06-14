@@ -7,6 +7,8 @@ import java.util.List;
 
 public class AnonymousFunc extends AstList {
 
+    private int size;
+
     public AnonymousFunc(List<AstTree> members) {
         super(members);
     }
@@ -28,5 +30,13 @@ public class AnonymousFunc extends AstList {
     public String toString() {
         return "( anonymous function " + parameters().toString()
                 + "{" + block().toString() + "})";
+    }
+
+    public int getSize() {
+        return size;
+    }
+
+    public void setSize(int size) {
+        this.size = size;
     }
 }

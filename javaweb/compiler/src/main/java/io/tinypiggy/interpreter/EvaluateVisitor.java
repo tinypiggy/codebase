@@ -2,11 +2,13 @@ package io.tinypiggy.interpreter;
 
 import io.tinypiggy.ast.*;
 import io.tinypiggy.exception.BasicException;
-import io.tinypiggy.exception.ParserException;
-import io.tinypiggy.parser.Parser;
 
 import java.util.Iterator;
 
+/**
+ * 解释器实现类
+ * 1. 遍历语法树，进行计算
+ */
 public class EvaluateVisitor implements Visitor<Object> {
 
     @Override
@@ -34,7 +36,7 @@ public class EvaluateVisitor implements Visitor<Object> {
     private Object computeForAssign(AstTree left, AstTree right, Environment environment){
         if (left instanceof SymbolLeaf){
             Object object = right.accept(this, environment);
-            environment.put(((SymbolLeaf) left).value(), object);
+            environment.put((AstLeaf) left, object);
             return object;
         }
         throw new BasicException("left value : " + left.toString() + "is not a symbol", left);
@@ -99,7 +101,7 @@ public class EvaluateVisitor implements Visitor<Object> {
 
     @Override
     public Object visit(SymbolLeaf symbolLeaf, Environment environment) {
-        Object object = environment.get(symbolLeaf.value());
+        Object object = environment.get(symbolLeaf);
         if (object == null){
             throw new BasicException("undefined symbol : " + symbolLeaf.value() + " at " + symbolLeaf.location());
         }
@@ -115,7 +117,7 @@ public class EvaluateVisitor implements Visitor<Object> {
                 object = ifStmt.thenBlock().accept(this, environment);
             }
             if (!(Boolean)condition && ifStmt.elseBlock() != null){
-                object = ifStmt.thenBlock().accept(this, environment);
+                object = ifStmt.elseBlock().accept(this, environment);
             }
         }else {
             throw new BasicException("while statement condition is not boolean");
@@ -157,13 +159,15 @@ public class EvaluateVisitor implements Visitor<Object> {
 
     @Override
     public Object visit(DefStmt defStmt, Environment environment){
-        String name = defStmt.functionName();
-        return environment.putLocal(name, new Function(defStmt.parameters(), defStmt.block(), environment, name));
+        return environment.putLocal(defStmt.functionName(),
+                new Function(defStmt.parameters(), defStmt.block(), environment,
+                        defStmt.functionName().token().getText(), defStmt.getSize()));
     }
 
     @Override
     public Object visit(AnonymousFunc anonymousFuc, Environment environment) {
-        return new Function(anonymousFuc.parameters(), anonymousFuc.block(), environment, "anonymous");
+        return new Function(anonymousFuc.parameters(), anonymousFuc.block(), environment,
+                "anonymous", anonymousFuc.size());
     }
 
     /**
@@ -226,7 +230,7 @@ public class EvaluateVisitor implements Visitor<Object> {
             throw new BasicException("function " + function.getName() + " 入参数量不正确:", args);
         }
         for (int i = 0; i < parameters.size(); i++){
-            funcEnv.putLocal(parameters.name(i), args.getMember(i).accept(this, callerEnv));
+            funcEnv.putLocal(parameters.getSymbol(i), args.getMember(i).accept(this, callerEnv));
         }
     }
 

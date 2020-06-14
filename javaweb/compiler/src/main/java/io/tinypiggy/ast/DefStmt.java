@@ -7,6 +7,8 @@ import java.util.List;
 
 public class DefStmt extends AstList {
 
+    private int index, size;
+
     public DefStmt(List<AstTree> members) {
         super(members);
     }
@@ -16,8 +18,8 @@ public class DefStmt extends AstList {
         return visitor.visit(this, environment);
     }
 
-    public String functionName(){
-        return ((AstLeaf)getMember(0)).token().getText();
+    public AstLeaf functionName(){
+        return ((AstLeaf)getMember(0));
     }
 
     public Parameters parameters(){
@@ -32,5 +34,21 @@ public class DefStmt extends AstList {
     public String toString() {
         return "( define function " + functionName() + parameters().toString()
                 + "{" + block().toString() + "})";
+    }
+
+    public int getIndex() {
+        return index;
+    }
+
+    public void setIndex(int index) {
+        this.index = index;
+    }
+
+    public int getSize() {
+        return size;
+    }
+
+    public void setSize(int size) {
+        this.size = size;
     }
 }

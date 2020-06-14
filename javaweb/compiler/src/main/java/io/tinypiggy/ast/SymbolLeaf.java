@@ -6,10 +6,17 @@ import io.tinypiggy.lexer.Token;
 
 public class SymbolLeaf extends AstLeaf {
 
-    private int deepth, index;
+    public static final int UNKNOWN = -1;
+
+    /**
+     * nest 所在作用域和当前作用和与的偏移量
+     * index 在作用域的变量数组中的索引
+     */
+    private int nest, index;
 
     public SymbolLeaf(Token token) {
         super(token);
+        this.index = UNKNOWN;
     }
 
     @Override
@@ -19,5 +26,21 @@ public class SymbolLeaf extends AstLeaf {
 
     public String value(){
         return token().getText();
+    }
+
+    public int getNest() {
+        return nest;
+    }
+
+    public void setNest(int nest) {
+        this.nest = nest;
+    }
+
+    public int getIndex() {
+        return index;
+    }
+
+    public void setIndex(int index) {
+        this.index = index;
     }
 }
