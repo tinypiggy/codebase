@@ -10,7 +10,7 @@ import io.tinypiggy.exception.BasicException;
  * 3. 确定函数作用域中参数位置
  * 4. 确定函数作用域参数个数，用于虚拟机确定栈的长度
  */
-public class LookupVisiter implements Visitor<Object> {
+public class LookupVisitor implements Visitor<Object> {
 
     @Override
     public Object visit(AstList astList, Environment environment) {

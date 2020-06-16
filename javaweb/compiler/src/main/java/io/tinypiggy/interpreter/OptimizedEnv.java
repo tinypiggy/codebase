@@ -5,8 +5,8 @@ import io.tinypiggy.ast.SymbolLeaf;
 
 public class OptimizedEnv implements Environment {
 
-    protected Environment out;
-    protected Object[] params;
+    Environment out;
+    Object[] params;
 
     public OptimizedEnv(Environment out, int initSize) {
         this.out = out;
