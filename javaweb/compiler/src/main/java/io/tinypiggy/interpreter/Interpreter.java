@@ -21,12 +21,12 @@ public class Interpreter {
             BasicParser basicParser = new ArrayParser();
             EvaluateVisitor evaluator = new EvaluateVisitor();
             ResizableOptEnv global = new ResizableOptEnv(null);
-            LookupVisiter lookupVisiter = new LookupVisiter();
+            LookupVisitor lookupVisitor = new LookupVisitor();
             NativeRegister.registerInEnv(global);
             while (lexer.peek(0) != Token.EOF) {
                 AstTree ast = basicParser.parse(lexer);
                 if (!(ast instanceof NullStmt)) {
-                    lookupVisiter.visit(ast, global.getSymbols());
+                    lookupVisitor.visit(ast, global.getSymbols());
                     Object value = evaluator.visit(ast, global);
                     System.out.println(ast.toString() + " => " + value);
                 }
