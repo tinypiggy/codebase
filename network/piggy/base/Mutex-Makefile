@@ -1,0 +1,25 @@
+CXX=g++
+CFLAG=-std=c++11 -g -I.
+RM=rm -rf
+
+Object=testMutex.o CountDownLatch.o Condition.o
+
+all: testMutex
+	@echo "compile done"
+
+testMutex: ${Object}
+	${CXX} ${CFLAG} -pthread -o $@ $^
+
+Condition.o: Condition.cc Condition.h
+	${CXX} ${CFLAG} -c -o $@ $<
+
+CountDownLatch.o: CountDownLatch.cc CountDownLatch.h
+	${CXX} ${CFLAG} -c -o $@ $<
+
+testMutex.o: testMutex.cc
+	${CXX} ${CFLAG} -c -o $@ $<
+
+clean:
+	${RM} ${Object} testMutex
+
+.PHONY: clean

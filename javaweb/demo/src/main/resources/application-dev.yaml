@@ -1,0 +1,24 @@
+server:
+  servlet:
+    context-path: /demo
+  port: 8090
+#  错误页面的目录 如 404.html
+#  error:
+#    path: /error
+spring:
+  thymeleaf:
+    prefix: classpath:/templates/
+    cache: false
+#    mode: HTML5
+#    encoding: UTF-8
+#    servlet:
+#      content-type: text/html
+#    suffix: .html
+#    enabled: true
+#  mvc:
+#    view:
+#      prefix: classpath:/templates/
+#      suffix: .html
+myConfig: test
+#logging:
+#  config: 配置文件地址
