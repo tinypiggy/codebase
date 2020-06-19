@@ -138,7 +138,7 @@ public class PostExpression {
 
     public static void main(String[] args) {
         PostExpression expression = new PostExpression();
-        expression.convert("1 + 2 * (3 + 4)");
+        expression.convert("1 + 2 * (3 * (4 + 10))");
         expression.getOutput().forEach(System.out::println);
         System.out.println(expression.calculate());
     }
