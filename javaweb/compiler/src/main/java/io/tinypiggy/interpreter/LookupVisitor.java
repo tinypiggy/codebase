@@ -133,4 +133,9 @@ public class LookupVisitor implements Visitor<Object> {
     public Object visit(IncludeExpr includeExpr, Environment environment) {
         return null;
     }
+
+    @Override
+    public Object visit(ReturnExpr returnExpr, Environment environment) {
+        return visitList(returnExpr, environment);
+    }
 }

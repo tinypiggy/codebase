@@ -38,4 +38,5 @@ public interface Visitor<T> {
     T visit(ArrayLiteral arrayLiteral, Environment environment);
 
     T visit(IncludeExpr includeExpr, Environment environment);
+    T visit(ReturnExpr returnExpr, Environment environment);
 }

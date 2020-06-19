@@ -1,15 +1,18 @@
 package io.tinypiggy.interpreter;
 
+import io.tinypiggy.ReturnObj;
 import io.tinypiggy.ast.AstTree;
 import io.tinypiggy.ast.IncludeExpr;
 import io.tinypiggy.ast.NullStmt;
 import io.tinypiggy.lexer.Lexer;
 import io.tinypiggy.lexer.Token;
-import io.tinypiggy.parser.ArrayParser;
 import io.tinypiggy.parser.BasicParser;
 import io.tinypiggy.parser.IncludeParser;
 
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
+import java.io.InputStreamReader;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -60,7 +63,7 @@ public class Interpreter {
                             process(env, ((IncludeExpr) value).fileName());
                         }
                     }
-                    System.out.println(ast.toString() + " => " + value);
+                    System.out.println(ast.toString() + " => " +  (value instanceof ReturnObj ? ((ReturnObj)value).result : value));
                 }
             }
             resolved.add(file);

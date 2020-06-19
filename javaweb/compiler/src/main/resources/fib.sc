@@ -7,7 +7,7 @@ def fib(x){
 }
 
 start = currentTime()
-fib(36)
+fib(2)
 end = currentTime()
 last = end - start
 

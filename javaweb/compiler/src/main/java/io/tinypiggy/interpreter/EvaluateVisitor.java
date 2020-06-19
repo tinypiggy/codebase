@@ -1,5 +1,6 @@
 package io.tinypiggy.interpreter;
 
+import io.tinypiggy.ReturnObj;
 import io.tinypiggy.ast.*;
 import io.tinypiggy.exception.BasicException;
 
@@ -152,7 +153,14 @@ public class EvaluateVisitor implements Visitor<Object> {
         Object object = null;
         Iterator<AstTree> members = astTrees.members();
         while (members.hasNext()){
-            object = members.next().accept(this, environment);
+            AstTree astTree = members.next();
+            object = astTree.accept(this, environment);
+            if (astTree instanceof ReturnExpr){
+                return new ReturnObj(object);
+            }
+            if (object instanceof ReturnObj){
+                return ((ReturnObj) object).result;
+            }
         }
         return object;
     }
@@ -246,5 +254,10 @@ public class EvaluateVisitor implements Visitor<Object> {
     @Override
     public Object visit(IncludeExpr includeExpr, Environment environment) {
         return includeExpr;
+    }
+
+    @Override
+    public Object visit(ReturnExpr returnExpr, Environment environment) {
+        return visitAstList(returnExpr, environment);
     }
 }
