@@ -128,4 +128,9 @@ public class LookupVisitor implements Visitor<Object> {
     public Object visit(ArrayLiteral arrayLiteral, Environment environment) {
         return visitList(arrayLiteral, environment);
     }
+
+    @Override
+    public Object visit(IncludeExpr includeExpr, Environment environment) {
+        return null;
+    }
 }

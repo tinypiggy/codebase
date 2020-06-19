@@ -242,4 +242,9 @@ public class EvaluateVisitor implements Visitor<Object> {
         }
         return arr;
     }
+
+    @Override
+    public Object visit(IncludeExpr includeExpr, Environment environment) {
+        return includeExpr;
+    }
 }
