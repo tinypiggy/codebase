@@ -15,4 +15,9 @@ public class BlockStmt extends AstList {
     public <T> T accept(Visitor<T> visitor, Environment environment) {
         return visitor.visit(this, environment);
     }
+
+    @Override
+    public String toString() {
+        return "{" + super.toString() + "}";
+    }
 }

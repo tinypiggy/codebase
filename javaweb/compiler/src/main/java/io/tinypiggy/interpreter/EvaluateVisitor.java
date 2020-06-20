@@ -117,8 +117,13 @@ public class EvaluateVisitor implements Visitor<Object> {
             if ((Boolean)condition){
                 object = ifStmt.thenBlock().accept(this, environment);
             }
-            if (!(Boolean)condition && ifStmt.elseBlock() != null){
-                object = ifStmt.elseBlock().accept(this, environment);
+            if (!(Boolean)condition && ifStmt.elsePart() != null ){
+                AstTree elsePart = ifStmt.elsePart();
+                if (elsePart instanceof IfStmt){
+                    object = visit(elsePart, environment);
+                }else {
+                    object = elsePart.accept(this, environment);
+                }
             }
         }else {
             throw new BasicException("while statement condition is not boolean");

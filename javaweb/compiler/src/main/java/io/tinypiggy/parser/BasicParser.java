@@ -36,8 +36,12 @@ public class BasicParser {
             .skip("{").option(statement0)
             .repeat(createParser().skip(Token.EOL).option(statement0))
             .skip("}");
+
+    private Parser ifstmt0 = createParser(IfStmt.class);
+    private Parser ifstmt = ifstmt0.skip("if").ast(expr).ast(block)
+            .option(createParser().skip("else").or(ifstmt0, block));
     private Parser statement = statement0.or(
-            createParser(IfStmt.class).skip("if").ast(expr).ast(block).option(createParser().skip("else").ast(block)),
+            ifstmt,
             createParser(WhileStmt.class).skip("while").ast(expr).ast(block),
             simple
     );

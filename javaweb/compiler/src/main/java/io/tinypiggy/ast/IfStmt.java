@@ -24,7 +24,7 @@ public class IfStmt extends AstList {
         return getMember(1);
     }
 
-    public AstTree elseBlock(){
+    public AstTree elsePart(){
         return size() > 2 ? getMember(2) : null;
     }
 
@@ -32,6 +32,6 @@ public class IfStmt extends AstList {
     public String toString() {
         return " if(" + condition().toString() + "){"
                 + thenBlock() + "}" +
-                (size() > 2 ? "else{" + elseBlock().toString() + "}" : "");
+                (size() > 2 ? " else " + elsePart().toString() + "" : "");
     }
 }
