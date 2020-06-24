@@ -78,7 +78,7 @@ public class LookupVisitor implements Visitor<Object> {
         Location location = symbols.put(leaf, null);
         leaf.setIndex(location.index);
         leaf.setNest(location.nest);
-        return null;
+        return leaf;
     }
 
     @Override

@@ -1,10 +1,12 @@
-primary		:( "fun" param_list block
+primary		:( "new" IDENTIFIER | ""fun" param_list block
 			| "[" [ elements ] "]" |"(" expr ")" | NUMBER | IDENTIFIER | STRING) { postfix }
 factor		: "-" primary | primary
 expr		: factor { OP factor}
-simple 		: expr [ args ]
+simple 		: [ "return" ] expr [ args ]
 block		: "{" [statement] { (EOL | ";") [statement] } "}"
-statement	: "if" expr block ["else" block]
+if          : "if" expr block ["else" else]
+else        : block | if
+statement	: if
 			| "while" expr block
 			| simple [ args ]
 
@@ -20,12 +22,16 @@ elements    : expr { "," expr }
 
 member		: def | simple
 classbody 	: "{" [member] { ( ";"|EOL ) [member] } "}"
-defclass	: "class" IDENTIFIER [ "extends" IDENTIFIER] classbody
+defclass	: "class" IDENTIFIER [ "extends" IDENTIFIER ] classbody
 
-program		: [ defclass | def | statement] {(EOL | ";")}
+include     : "import" IDENTIFIER {"." IDENTIFIER}
+
+program		: [ include | defclass | def | statement] {(EOL | ";")}
 
 
 修改方向：
 1、如果已经定义了外层定义域变量，内层定义域不能定义相同名字的变量，只能读写外层定义域变量（函数参数除外）
-2、不支持 else if 语法
-3、函数
+2、不支持 else if 语法 -- 已支持
+3、return -- 已支持
+4、类实现的问题，如果对类成员实现数组方式寻址，lookup解析符号时，由于不能确定类，所以不能确定地址
+// p = get(); p.x
