@@ -15,6 +15,9 @@ public class OptimizedEnv implements Environment {
 
     @Override
     public Object get(AstLeaf leaf) {
+        if (leaf.token().getText().equals("this")){
+            return params[0];
+        }
         SymbolLeaf symbolLeaf = (SymbolLeaf)leaf;
         int nest = symbolLeaf.getNest();
         int index = symbolLeaf.getIndex();

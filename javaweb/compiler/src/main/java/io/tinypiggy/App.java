@@ -1,9 +1,7 @@
 package io.tinypiggy;
 
-import io.tinypiggy.parser.OperatorPriority;
-
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Hello world!
@@ -28,9 +26,14 @@ public class App
 //        m.region(7,text.length());
 //        m.find();
 //        System.out.println("Matches starting at character "+m.start());
-        long start = System.currentTimeMillis();
-        fib(36);
-        System.out.println(System.currentTimeMillis() - start);
+
+//        long start = System.currentTimeMillis();
+//        fib(36);
+//        System.out.println(System.currentTimeMillis() - start);
+
+        List<String> names = new ArrayList<>();
+        names.add(2, "liuke");
+        System.out.println(names.get(2));
     }
 
     private static int fib(int x){

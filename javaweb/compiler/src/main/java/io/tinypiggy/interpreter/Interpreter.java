@@ -7,7 +7,7 @@ import io.tinypiggy.ast.NullStmt;
 import io.tinypiggy.lexer.Lexer;
 import io.tinypiggy.lexer.Token;
 import io.tinypiggy.parser.BasicParser;
-import io.tinypiggy.parser.IncludeParser;
+import io.tinypiggy.parser.ObjectParser;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -23,13 +23,13 @@ public class Interpreter {
     // 符号解析
     private final static LookupVisitor lookupVisitor = new LookupVisitor();
     // 抽象语法树生成
-    private final static BasicParser basicParser = new IncludeParser();
+    private final static BasicParser basicParser = new ObjectParser();
 
     private final static String Path = System.getProperty("user.dir");
 
     // import 导入的文件
-    public static Set<String> resolving = new HashSet<>();
-    public static Set<String> resolved = new HashSet<>();
+    private static Set<String> resolving = new HashSet<>();
+    private static Set<String> resolved = new HashSet<>();
 
 
     public static void main(String[] args) {
@@ -37,14 +37,14 @@ public class Interpreter {
         if (args == null || args.length < 1){
             throw new RuntimeException("usage: interpreter file");
         }
-        // 生成环境
+        // 程序执行上下文环境
         ResizableOptEnv global = new ResizableOptEnv(null);
         NativeRegister.registerInEnv(global);
         String file = args[0];
         process(global, file);
     }
 
-    public static void process(ResizableOptEnv env, String file){
+    private static void process(ResizableOptEnv env, String file){
 
         BufferedReader reader;
         try {

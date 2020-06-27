@@ -35,6 +35,11 @@ public class Symbols implements Environment {
         return null;
     }
 
+
+    public Map<String, Integer> variables(){
+        return variables;
+    }
+
     @Override
     public Location get(AstLeaf key){
         return get(key, 0);
@@ -60,4 +65,7 @@ public class Symbols implements Environment {
         return location;
     }
 
+    public void setOut(Symbols out) {
+        this.out = out;
+    }
 }

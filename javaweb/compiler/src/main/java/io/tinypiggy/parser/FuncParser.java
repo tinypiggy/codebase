@@ -8,7 +8,7 @@ public class FuncParser extends BasicParser {
 
     private Parser params = createParser(Parameters.class).symbol(SymbolLeaf.class, reserved)
             .repeat(createParser().skip(",").symbol(SymbolLeaf.class, reserved));
-    private Parser def = createParser(DefStmt.class).skip("def").symbol(SymbolLeaf.class, reserved)
+    Parser def = createParser(DefStmt.class).skip("def").symbol(SymbolLeaf.class, reserved)
                 .skip("(").maybe(params).skip(")").ast(block);
     private Parser args = createParser(Args.class).ast(expr)
             .repeat(createParser().skip(",").ast(expr));

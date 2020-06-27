@@ -39,6 +39,12 @@ public class EvaluateVisitor implements Visitor<Object> {
             Object object = right.accept(this, environment);
             environment.put((AstLeaf) left, object);
             return object;
+        }else if (left.size() > 1 && left.getMember(1) instanceof Member){
+            // 暂不考虑类成员是对象
+            TinyObject tinyObject = (TinyObject)environment.get((AstLeaf) left.getMember(0));
+            Object object = right.accept(this, environment);
+            tinyObject.write((SymbolLeaf) left.getMember(1).getMember(0), object);
+            return object;
         }
         throw new BasicException("left value : " + left.toString() + "is not a symbol", left);
     }
@@ -172,6 +178,8 @@ public class EvaluateVisitor implements Visitor<Object> {
 
     @Override
     public Object visit(DefStmt defStmt, Environment environment){
+        // 这里可以不用 putLocal, 为了不改动代码才如此处理
+        // environment.put(0, defStmt.getIndex(), new Function());
         return environment.putLocal(defStmt.functionName(),
                 new Function(defStmt.parameters(), defStmt.block(), environment,
                         defStmt.functionName().token().getText(), defStmt.getSize()));
@@ -181,6 +189,17 @@ public class EvaluateVisitor implements Visitor<Object> {
     public Object visit(AnonymousFunc anonymousFuc, Environment environment) {
         return new Function(anonymousFuc.parameters(), anonymousFuc.block(), environment,
                 "anonymous", anonymousFuc.size());
+    }
+
+    @Override
+    public Object visit(DefClass defClass, Environment environment) {
+        OptimizedEnv env = (OptimizedEnv)environment;
+        defClass.getClassInfo().setEnvironment(environment);
+        return env.put(0, defClass.getIndex(), defClass.getClassInfo());
+    }
+
+    public Object visitClassBody(ClassBody classBody, Environment environment) {
+        return null;
     }
 
     /**
@@ -203,6 +222,17 @@ public class EvaluateVisitor implements Visitor<Object> {
     }
 
     private Object processNext(AstTree postfix, Object prefix, Environment environment){
+
+        if (prefix instanceof TinyObject && (postfix instanceof Member)){
+            return ((TinyObject) prefix).read((SymbolLeaf)postfix.getMember(0));
+        }
+
+        if ((postfix instanceof Args) && (prefix instanceof TinyMethod)){
+            OptimizedEnv funcEnv = (OptimizedEnv)((TinyMethod) prefix).makeEnvironment();
+            funcEnv.put(0, 0, ((TinyMethod) prefix).getSelf());
+            resolveParams((Function)prefix, (Args)postfix, funcEnv, environment);
+            return ((Function)prefix).getBlock().accept(this, funcEnv);
+        }
 
         if (prefix instanceof NativeFunction && (postfix instanceof Args)){
             Args arguments = (Args)postfix;
@@ -264,5 +294,22 @@ public class EvaluateVisitor implements Visitor<Object> {
     @Override
     public Object visit(ReturnExpr returnExpr, Environment environment) {
         return visitAstList(returnExpr, environment);
+    }
+
+    @Override
+    public Object visit(NewExpr newExpr, Environment environment) {
+        Object value = environment.get((AstLeaf) newExpr.getMember(0));
+        if (!(value instanceof ClassInfo)){
+            throw new BasicException("the class for create object is not found", newExpr);
+        }
+        OptimizedEnv env = new OptimizedEnv(((ClassInfo) value).environment(), 1);
+        TinyObject tinyObject = new TinyObject(env, (ClassInfo) value);
+        env.put(0, 0, tinyObject);
+        return tinyObject;
+    }
+
+    @Override
+    public Object visit(Member member, Environment environment) {
+        return null;
     }
 }

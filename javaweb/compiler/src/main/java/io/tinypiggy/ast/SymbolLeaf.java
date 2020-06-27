@@ -13,6 +13,7 @@ public class SymbolLeaf extends AstLeaf {
      * index 在作用域的变量数组中的索引
      */
     private int nest, index;
+    private ClassInfo classInfo;
 
     public SymbolLeaf(Token token) {
         super(token);
@@ -42,5 +43,9 @@ public class SymbolLeaf extends AstLeaf {
 
     public void setIndex(int index) {
         this.index = index;
+    }
+
+    public ClassInfo classInfo(){
+        return classInfo;
     }
 }

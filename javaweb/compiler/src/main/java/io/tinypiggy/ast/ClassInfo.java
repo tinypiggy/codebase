@@ -3,14 +3,53 @@ package io.tinypiggy.ast;
 import io.tinypiggy.interpreter.Environment;
 import io.tinypiggy.interpreter.Symbols;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class ClassInfo {
 
-    Symbols methods, fields;
-    DefStmt[] defStmts;
-    ClassInfo parent;
-    Environment env;
+    private DefClass defClass;
+    private Symbols methods, fields;
+    private List<DefStmt> defStmts;
+    private ClassInfo parent;
+    Environment environment;
 
-    public ClassInfo() {
+    public ClassInfo(Environment env, DefClass defClass, Symbols methods, Symbols fields) {
+        this.environment = env;
+        this.defClass = defClass;
+        if(defClass.hasSuperClass()){
+            parent = (ClassInfo) env.get(defClass.superClass());
+        }
+        this.fields = fields;
+        this.methods = methods;
+        defStmts = new ArrayList<>();
+    }
 
+    public ClassInfo getParent(){
+        return parent;
+    }
+
+    public void setEnvironment(Environment environment) {
+        this.environment = environment;
+    }
+
+    public Environment environment(){
+        return environment;
+    }
+
+    public List<DefStmt> getDefStmts() {
+        return defStmts;
+    }
+
+    public Symbols getMethods() {
+        return methods;
+    }
+
+    public Symbols getFields() {
+        return fields;
+    }
+
+    public String toString(){
+        return "(class " + defClass.className().value() + ")";
     }
 }

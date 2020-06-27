@@ -36,7 +36,10 @@ public interface Visitor<T> {
     T visit(DefStmt defStmt, Environment environment);
     T visit(AnonymousFunc anonymousFuc, Environment environment);
     T visit(ArrayLiteral arrayLiteral, Environment environment);
+    T visit(DefClass defClass, Environment env);
 
     T visit(IncludeExpr includeExpr, Environment environment);
     T visit(ReturnExpr returnExpr, Environment environment);
+    T visit(NewExpr newExpr, Environment environment);
+    T visit(Member member, Environment environment);
 }
