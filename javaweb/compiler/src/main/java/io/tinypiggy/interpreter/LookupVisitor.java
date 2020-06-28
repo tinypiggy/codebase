@@ -142,7 +142,7 @@ public class LookupVisitor implements Visitor<Object> {
         Symbols clazz = new Symbols(symbols);
         Symbols methods = new Symbols(null);
         Symbols fields = new Symbols(null);
-        ClassInfo classInfo = new ClassInfo(null, defClass, methods, fields);
+        ClassInfo classInfo = new ClassInfo(environment, defClass, methods, fields);
         // 解析 classBody 中类变量和方法
         visitClassBody(defClass.getBody(), clazz, methods, classInfo);
         defClass.setClassInfo(classInfo);

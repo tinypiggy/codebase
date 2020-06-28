@@ -1,7 +1,6 @@
 package io.tinypiggy.ast;
 
-import io.tinypiggy.interpreter.Environment;
-import io.tinypiggy.interpreter.Symbols;
+import io.tinypiggy.interpreter.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -18,7 +17,14 @@ public class ClassInfo {
         this.environment = env;
         this.defClass = defClass;
         if(defClass.hasSuperClass()){
-            parent = (ClassInfo) env.get(defClass.superClass());
+            Location location = null;
+            if (env instanceof Symbols){
+                location = ((Symbols) env).get(defClass.superClass());
+            }
+            if (env instanceof ResizableOptEnv){
+                location = ((ResizableOptEnv) env).getSymbols().get(defClass.superClass());
+            }
+            parent = (ClassInfo)Interpreter.global.get(0, location.index, defClass.superClass());
         }
         this.fields = fields;
         this.methods = methods;

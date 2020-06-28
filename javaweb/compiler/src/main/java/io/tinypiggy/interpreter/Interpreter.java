@@ -31,14 +31,15 @@ public class Interpreter {
     private static Set<String> resolving = new HashSet<>();
     private static Set<String> resolved = new HashSet<>();
 
+    // 程序执行上下文环境
+    public static ResizableOptEnv global = new ResizableOptEnv(null);
 
     public static void main(String[] args) {
 
         if (args == null || args.length < 1){
             throw new RuntimeException("usage: interpreter file");
         }
-        // 程序执行上下文环境
-        ResizableOptEnv global = new ResizableOptEnv(null);
+        // 注册 native 函数
         NativeRegister.registerInEnv(global);
         String file = args[0];
         process(global, file);

@@ -5,7 +5,11 @@ class base {
     }
 }
 
-object = new base
+class derived extends base {
+
+}
+
+object = new derived
 
 object.a = 2
 object.method1(2)
