@@ -17,13 +17,9 @@ public class ClassInfo {
         this.environment = env;
         this.defClass = defClass;
         if(defClass.hasSuperClass()){
-            Location location = null;
-            if (env instanceof Symbols){
-                location = ((Symbols) env).get(defClass.superClass());
-            }
-            if (env instanceof ResizableOptEnv){
-                location = ((ResizableOptEnv) env).getSymbols().get(defClass.superClass());
-            }
+            // 初始化时 env 是 Symbols， 之后会替换成 OptimizedEnv
+            assert env instanceof Symbols;
+            Location location = ((Symbols) env).get(defClass.superClass());
             parent = (ClassInfo)Interpreter.global.get(0, location.index, defClass.superClass());
         }
         this.fields = fields;
